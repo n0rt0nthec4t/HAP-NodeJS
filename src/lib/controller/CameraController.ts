@@ -48,6 +48,10 @@ export interface CameraControllerOptions {
    * Options regarding Recordings (Secure Video)
    */
   // recordingOptions: CameraRecordingOptions, // soon
+  /*
+   * Allow a name to be assigned to either camera or doorbell services
+   */
+  name: string,
 }
 
 export type SnapshotRequestCallback = (error?: Error | HAPStatus, buffer?: Buffer) => void;
@@ -142,7 +146,7 @@ export class CameraController extends EventEmitter implements Controller<CameraC
     this.streamCount = Math.max(1, options.cameraStreamCount || 1);
     this.delegate = options.delegate;
     this.streamingOptions = options.streamingOptions;
-
+    this.name = options.name || ""; // Override service name from default of blank
     this.legacyMode = legacyMode; // legacy mode will prent from Microphone and Speaker services to get created to avoid collisions
   }
 
