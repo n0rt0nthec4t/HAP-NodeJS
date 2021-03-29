@@ -26,7 +26,7 @@ export class DoorbellController extends CameraController { // TODO optional name
     }
 
     constructServices(): CameraControllerServiceMap {
-        this.doorbellService = new Service.Doorbell('', '');
+        this.doorbellService = new Service.Doorbell(this.name, '');
         this.doorbellService.setPrimaryService();
 
         const serviceMap = super.constructServices();
@@ -39,7 +39,7 @@ export class DoorbellController extends CameraController { // TODO optional name
 
         this.doorbellService = serviceMap.doorbell;
         if (!this.doorbellService) { // see NOTICE above
-            this.doorbellService = new Service.Doorbell('', '');
+            this.doorbellService = new Service.Doorbell(this.name, '');
             this.doorbellService.setPrimaryService();
 
             serviceMap.doorbell = this.doorbellService;
