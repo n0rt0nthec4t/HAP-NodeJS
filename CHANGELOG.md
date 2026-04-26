@@ -24,6 +24,7 @@ All notable changes to `@homebridge/hap-nodejs` will be documented in this file.
 - fix: `"undefined"` string in characteristic error warnings
 - fix: O(n²) buffer concat in encrypt/decrypt hot path
 - chore: dependency updates, inc. `typescript`
+- docs: regenerate typedoc docs
 
 ### Homebridge Dependencies
 
