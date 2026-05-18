@@ -743,12 +743,16 @@ export class RTPStreamManagement {
 
   private streamingIsDisabled(callback?: CharacteristicSetCallback): boolean {
     if (!this.service.getCharacteristic(Characteristic.Active).value) {
-      callback && callback(new HapStatusError(HAPStatus.NOT_ALLOWED_IN_CURRENT_STATE));
+      if (callback) {
+        callback(new HapStatusError(HAPStatus.NOT_ALLOWED_IN_CURRENT_STATE));
+      }
       return true;
     }
 
     if (this.disabledThroughOperatingMode?.()) {
-      callback && callback(new HapStatusError(HAPStatus.NOT_ALLOWED_IN_CURRENT_STATE));
+      if (callback) {
+        callback(new HapStatusError(HAPStatus.NOT_ALLOWED_IN_CURRENT_STATE));
+      }
       return true;
     }
 
@@ -810,6 +814,19 @@ export class RTPStreamManagement {
   }
 
   private _handleStartStream(
+    videoConfiguration: Record<number, Buffer>,
+    audioConfiguration: Record<number, Buffer>,
+    callback: CharacteristicSetCallback,
+  ): void {
+    try {
+      this._handleStartStreamInner(videoConfiguration, audioConfiguration, callback);
+    } catch (error) {
+      debug("Failed to parse stream start request: %s", (error as Error).message);
+      callback(HAPStatus.INVALID_VALUE_IN_REQUEST);
+    }
+  }
+
+  private _handleStartStreamInner(
     videoConfiguration: Record<number, Buffer>,
     audioConfiguration: Record<number, Buffer>,
     callback: CharacteristicSetCallback,
@@ -1147,6 +1164,15 @@ export class RTPStreamManagement {
           this.generateSetupEndpointResponse(connection, sessionIdentifier, prepareRequest, response, callback);
         }
       }));
+    }).catch((error: Error) => {
+      debug(`RTP proxy setup failed: ${error.message}`);
+      this.setupEndpointsResponse = tlv.encode(
+        SetupEndpointsResponseTypes.SESSION_ID, uuid.write(sessionIdentifier),
+        SetupEndpointsResponseTypes.STATUS, SetupEndpointsStatus.ERROR,
+      ).toString("base64");
+
+      this.handleSessionClosed();
+      callback(error);
     });
   }
 

@@ -50,15 +50,6 @@ export const enum AdvertiserEvent {
 /**
  * @group Advertiser
  */
-export declare interface Advertiser {
-  on(event: "updated-name", listener: (name: string) => void): this;
-
-  emit(event: "updated-name", name: string): boolean;
-}
-
-/**
- * @group Advertiser
- */
 export interface ServiceNetworkOptions {
   /**
    * If defined it restricts the service to be advertised on the specified
@@ -98,6 +89,10 @@ export interface Advertiser {
   updateAdvertisement(silent?: boolean): void;
 
   destroy(): void;
+
+  on(event: "updated-name", listener: (name: string) => void): this;
+
+  emit(event: "updated-name", name: string): boolean;
 }
 
 /**
@@ -184,7 +179,7 @@ export class CiaoAdvertiser extends EventEmitter implements Advertiser {
   static computeSetupHash(accessoryInfo: AccessoryInfo): string {
     const hash = crypto.createHash("sha512");
     hash.update(accessoryInfo.setupID + accessoryInfo.username.toUpperCase());
-    return hash.digest().slice(0, 4).toString("base64");
+    return hash.digest().subarray(0, 4).toString("base64");
   }
 
   public static ff(...flags: PairingFeatureFlag[]): number {
