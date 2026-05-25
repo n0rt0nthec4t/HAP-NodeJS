@@ -384,192 +384,192 @@ describe("Accessory", () => {
 
   describe("Accessory and Service naming checks", () => {
     let consoleWarnSpy: jest.SpyInstance;
-  
+
     beforeEach(() => {
       consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
     });
-    
+
     afterEach(() => {
       consoleWarnSpy.mockRestore();
     });
-  
+
     test("Accessory Name ending with !", async () => {
       const accessoryBadName = new Accessory("Bad Name!", uuid.generate("Bad Name"));
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
       // eslint-disable-next-line max-len
       expect(consoleWarnSpy).toHaveBeenCalledWith("HAP-NodeJS WARNING: The accessory 'Bad Name!' has an invalid 'Name' characteristic ('Bad Name!'). Please ensure the name starts and ends with a letter or number. Only letters, numbers, spaces, apostrophes, and common punctuation are supported. Avoid emojis or unsupported symbols. This may prevent the accessory from being added in the Home App or cause unresponsiveness.");
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
     });
-  
+
     test("Accessory Name containing !", async () => {
       const accessoryBadName = new Accessory("Bad ! Name", uuid.generate("Bad Name"));
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(0);
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
     });
-  
+
     test("Accessory Name containing '", async () => {
       const accessoryBadName = new Accessory("Bad ' Name", uuid.generate("Bad ' Name"));
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(0);
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
     });
-  
+
     test("Accessory Name starting with '", async () => {
       const accessoryBadName = new Accessory("'Bad Name", uuid.generate("Bad Name"));
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
       // eslint-disable-next-line max-len
       expect(consoleWarnSpy).toHaveBeenCalledWith("HAP-NodeJS WARNING: The accessory ''Bad Name' has an invalid 'Name' characteristic (''Bad Name'). Please ensure the name starts and ends with a letter or number. Only letters, numbers, spaces, apostrophes, and common punctuation are supported. Avoid emojis or unsupported symbols. This may prevent the accessory from being added in the Home App or cause unresponsiveness.");
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
     });
-  
+
     test("Service Name containing !", async () => {
       const switchService = new Service.Switch("My Bad ! Switch");
       const accessoryBadName = new Accessory("Bad Name", uuid.generate("Bad Name"));
       accessoryBadName.addService(switchService);
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(0);
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
     });
-  
+
     test("Service Name ending with !", async () => {
       const switchService = new Service.Switch("My Bad Switch!");
       const accessoryBadName = new Accessory("Bad Name", uuid.generate("Bad Name"));
       accessoryBadName.addService(switchService);
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
       // eslint-disable-next-line max-len
       expect(consoleWarnSpy).toHaveBeenCalledWith("HAP-NodeJS WARNING: The accessory 'My Bad Switch!' has an invalid 'Name' characteristic ('My Bad Switch!'). Please ensure the name starts and ends with a letter or number. Only letters, numbers, spaces, apostrophes, and common punctuation are supported. Avoid emojis or unsupported symbols. This may prevent the accessory from being added in the Home App or cause unresponsiveness.");
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
     });
-  
+
     test("Service Name containing '", async () => {
       const switchService = new Service.Switch("My Bad ' Switch");
       const accessoryBadName = new Accessory("Bad Name", uuid.generate("Bad Name"));
       accessoryBadName.addService(switchService);
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(0);
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
     });
-  
+
     test("Service Name ending with '", async () => {
       const switchService = new Service.Switch("My Bad Switch'");
       const accessoryBadName = new Accessory("Bad Name", uuid.generate("Bad Name"));
       accessoryBadName.addService(switchService);
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
       // eslint-disable-next-line max-len
       expect(consoleWarnSpy).toHaveBeenCalledWith("HAP-NodeJS WARNING: The accessory 'My Bad Switch'' has an invalid 'Name' characteristic ('My Bad Switch''). Please ensure the name starts and ends with a letter or number. Only letters, numbers, spaces, apostrophes, and common punctuation are supported. Avoid emojis or unsupported symbols. This may prevent the accessory from being added in the Home App or cause unresponsiveness.");
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
     });
-  
+
     test("Service Name beginning with '", async () => {
       const switchService = new Service.Switch("'My Bad Switch");
       const accessoryBadName = new Accessory("Bad Name", uuid.generate("Bad Name"));
       accessoryBadName.addService(switchService);
-  
+
       const publishInfo: PublishInfo = {
         username: serverUsername,
         pincode: "000-00-000",
         category: Categories.SWITCH,
         advertiser: undefined,
       };
-  
+
       await accessoryBadName.publish(publishInfo);
       expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
       // eslint-disable-next-line max-len
       expect(consoleWarnSpy).toHaveBeenCalledWith("HAP-NodeJS WARNING: The accessory ''My Bad Switch' has an invalid 'Name' characteristic (''My Bad Switch'). Please ensure the name starts and ends with a letter or number. Only letters, numbers, spaces, apostrophes, and common punctuation are supported. Avoid emojis or unsupported symbols. This may prevent the accessory from being added in the Home App or cause unresponsiveness.");
-  
+
       await awaitEventOnce(accessoryBadName, AccessoryEventTypes.ADVERTISED);
       await accessoryBadName?.unpublish();
       await accessoryBadName?.destroy();
@@ -602,7 +602,6 @@ describe("Accessory", () => {
       await accessoryConfiguredName?.unpublish();
       await accessoryConfiguredName?.destroy();
     });
-
   });
 
   describe("pairing", () => {
