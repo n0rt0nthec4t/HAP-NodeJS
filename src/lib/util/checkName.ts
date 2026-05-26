@@ -26,7 +26,7 @@ export function checkName(displayName: string, name: string, value: Nullable<Cha
       "'). Please ensure the name starts and ends with a letter or number. " +
       "Only letters, numbers, spaces, apostrophes, and common punctuation " +
       "are supported. Avoid emojis or unsupported symbols. This may prevent " +
-      "the accessory from being added in the Home App or cause unresponsiveness."
+      "the accessory from being added in the Home App or cause unresponsiveness.",
     );
   }
 }
